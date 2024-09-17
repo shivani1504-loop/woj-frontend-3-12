@@ -1,0 +1,102 @@
+import React, { useEffect, useState } from "react";
+import Layout from "../Layout/Layout";
+import styled from "styled-components";
+import axios from "axios";
+import { Link } from "react-router-dom";
+
+const RegResponse = () => {
+  const [data, setData] = useState([]);
+
+  const getLastReciept = async () => {
+    try {
+      const res = await axios.get(
+        "http://localhost:4400/api/auth/getLastReceipt"
+      );
+      setData(res.data);
+      console.log(res.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const updateStatus = async () => {
+    try {
+      console.log(data.recID);
+      const response = await axios.put(
+        `http://localhost:4400/api/auth/update-order/${data.recID}`,
+        { status: "success" }
+      );
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getLastReciept();
+
+    // Call updateStatus() five times
+    Array.from({ length: 5 }).forEach(() => {
+      updateStatus();
+    });
+  }, []);
+
+  console.log(data);
+
+  return (
+    <>
+      <Layout title={"Response - DG KIDOS"}>
+        <Container>
+          <div className="d-flex justify-content-center">
+            <div className="box p-5 rounded shadow">
+              {/* <p className="text-justify">
+                Dear Parent,
+                <br /> <br />
+                <strong>Form Number – {data.receipt}</strong> is received. We
+                thank you and appreciate your interest for seeking Registration
+                in our school. An amount of Rs. 500/- has been received against
+                the
+                <strong> Receipt No. {data.pay_id}</strong>. We shall go through
+                the details/document submitted and if found eligible/illegible
+                will inform you accordingly.
+                <br />
+                <br />
+                With Regards <strong>DG KIDOS, Jabalpur</strong>
+              </p> */}
+              <p className="text-justify">
+                Dear Parent,
+                <br /> <br />
+                Your Form has been received. We thank you and appreciate your
+                interest for seeking Registration in our school. We shall go
+                through the details/document submitted and if found
+                eligible/illegible will inform you accordingly.
+                <br />
+                <br />
+                With Regards <strong>DG KIDOS, Jabalpur</strong>
+              </p>
+              <Link to="/" className="btn btn-outline-success">
+                Go Home
+              </Link>
+            </div>
+          </div>
+        </Container>
+      </Layout>
+    </>
+  );
+};
+
+export default RegResponse;
+const Container = styled.div`
+  background: url("https://res.cloudinary.com/antrix/image/upload/v1681813312/party%20people%20rockon/mid-two-bg_ego2on.png");
+  height: 90vh;
+  .box {
+    width: 25rem;
+    background: #e0e0e0;
+    // box-shadow: 0px 11px 30px #988f8f;
+    margin-top: 5rem;
+    margin-bottom: 3rem;
+    p {
+      text-align: justify;
+    }
+  }
+`;

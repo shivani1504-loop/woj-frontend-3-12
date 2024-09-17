@@ -1,0 +1,3 @@
+User agent : *
+Crawl Depth:10
+Disallow:
